@@ -2,18 +2,13 @@ import type { Profile } from "../types/profiles";
 
 export const profile: Profile = {
   fullName: "",
-  surname: "",
   nickname: "",
   birthday: "",
 
   photo: "",
   throwbackPhoto: "",
 
-  socialMedia: {
-    instagram: "",
-    x: "",
-    linkedin: "",
-  },
+  social: "",
 
   funFact: "",
   favCourse: "",

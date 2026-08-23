@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import type { Profile } from "../../types/profiles";
 
@@ -30,9 +30,12 @@ type BgColor = keyof typeof BACKGROUNDS;
 
 interface SpotlightProps {
   profile: Profile;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+  selector?: ReactNode;
 }
 
-const Spotlight = ({ profile }: SpotlightProps) => {
+const Spotlight = ({ profile, onRefresh, isRefreshing, selector }: SpotlightProps) => {
 
   const [bgColor, setBgColor] = useState<BgColor>("blue");
 
@@ -133,28 +136,37 @@ const Spotlight = ({ profile }: SpotlightProps) => {
 
       {/* Background switcher */}
 
-      <div className="mx-auto mb-3 flex w-full items-center justify-end gap-2 md:max-w-[800px]">
+      <div className="mx-auto mb-3 flex w-full items-center justify-between gap-2 md:max-w-[800px]">
 
-        <span className="font-mono text-[10px] uppercase tracking-wider text-gray-500">
-          Theme
-        </span>
+        {/* Student selector (left) — empty spacer keeps Theme right-aligned when absent */}
+        <div className="min-w-0 flex-1">
+          {selector}
+        </div>
 
-        {(Object.keys(BACKGROUNDS) as BgColor[]).map((color) => (
-          <button
-            key={color}
-            type="button"
-            onClick={() => setBgColor(color)}
-            aria-label={`${color} background`}
-            aria-pressed={bgColor === color}
-            title={`${color} background`}
-            style={{ backgroundColor: SWATCH_COLOR[color] }}
-            className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-[#09091b] transition ${
-              bgColor === color
-                ? "ring-white"
-                : "ring-transparent hover:ring-white/40"
-            }`}
-          />
-        ))}
+        <div className="flex items-center gap-2">
+
+          <span className="font-mono text-[10px] uppercase tracking-wider text-gray-500">
+            Theme
+          </span>
+
+          {(Object.keys(BACKGROUNDS) as BgColor[]).map((color) => (
+            <button
+              key={color}
+              type="button"
+              onClick={() => setBgColor(color)}
+              aria-label={`${color} background`}
+              aria-pressed={bgColor === color}
+              title={`${color} background`}
+              style={{ backgroundColor: SWATCH_COLOR[color] }}
+              className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-[#09091b] transition ${
+                bgColor === color
+                  ? "ring-white"
+                  : "ring-transparent hover:ring-white/40"
+              }`}
+            />
+          ))}
+
+        </div>
 
       </div>
 
@@ -168,13 +180,14 @@ const Spotlight = ({ profile }: SpotlightProps) => {
     border border-white/20
     bg-cover bg-center bg-no-repeat
     text-white transition-colors
+    md:flex md:aspect-[3/4] md:flex-col
         "
       >
         <TopMeta />
 
-        <Header />
+        <Header onFetch={onRefresh} isFetching={isRefreshing} />
 
-        <div className="grid grid-cols-1 gap-4 px-5 pb-8 sm:grid-cols-[1fr_1.08fr] sm:px-9">
+        <div className="grid grid-cols-1 gap-4 px-5 pb-8 sm:grid-cols-[1fr_1.08fr] sm:px-9 md:min-h-0 md:flex-1 md:overflow-y-auto">
 
           <div>
 

@@ -1,19 +1,14 @@
-export interface SocialMedia {
-  instagram: string;
-  x: string;
-  linkedin: string;
-}
-
 export interface Profile {
+  /** Full name (single column in the sheet — Nigerian names often list surname first). */
   fullName: string;
-  surname: string;
   nickname: string;
   birthday: string;
 
   photo: string;
   throwbackPhoto: string;
 
-  socialMedia: SocialMedia;
+  /** Raw social handle/URL text as typed in the form (free-form, may be empty). */
+  social: string;
 
   funFact: string;
   favCourse: string;

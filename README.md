@@ -499,20 +499,21 @@ dist/
 
 ## Phase 2 — Dynamic Data
 
-- [ ] Connect Google Sheets
-- [ ] Read published CSV data
-- [ ] Convert CSV rows into typed profiles
-- [ ] Dynamically populate Spotlight profiles
-- [ ] Add student selection/search
+- [x] Connect Google Sheets
+- [x] Read published CSV data
+- [x] Convert CSV rows into typed profiles
+- [x] Dynamically populate Spotlight profiles
+- [x] Add student selection
+- [ ] Add student search
 
 ## Phase 3 — User Experience
 
-- [ ] Implement `[FETCH:USER DATA]`
-- [ ] Add loading states
-- [ ] Add error states
+- [x] Implement `[FETCH:USER DATA]`
+- [x] Add loading states
+- [x] Add error states
 - [ ] Add profile transitions
 - [ ] Add image fallback handling
-- [ ] Add shareable profile URLs
+- [x] Add shareable profile URLs
 - [ ] Add profile search
 
 ## Phase 4 — Production

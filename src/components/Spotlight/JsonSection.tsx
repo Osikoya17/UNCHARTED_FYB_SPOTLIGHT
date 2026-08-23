@@ -18,24 +18,25 @@ const JsonSection = ({
       {lines.map((line, index) => (
         <div
           key={line.key}
-          className="grid grid-cols-[25px_auto_12px_minmax(0,1fr)] gap-1 py-1 text-[10px] leading-5 sm:grid-cols-[30px_auto_15px_minmax(0,1fr)] sm:text-[13px]"
+          className="grid grid-cols-[25px_minmax(0,1fr)] gap-1 py-1 text-[10px] leading-5 sm:grid-cols-[30px_minmax(0,1fr)] sm:text-[13px]"
         >
 
           <span className="text-[#999aaa]">
             {startNumber + index}
           </span>
 
-          <span className="font-bold font-apfel">
-            "{line.key}"
-          </span>
-
-          <span className="text-gray-500">
-            :
-          </span>
-
-          <span className="break-words text-black font-mono">
-            "{line.value}"
-          </span>
+          {/*
+            Hanging indent: the whole "key": "value" pair flows as one block.
+            padding-left sets a FIXED left indentation for every wrapped line,
+            and the matching negative text-indent pulls the first line back
+            flush with the gutter — so continuation lines always align to the
+            same x regardless of how long the key is.
+          */}
+          <p className="break-words pl-5 [text-indent:-1.25rem]">
+            <span className="font-bold font-apfel">"{line.key}"</span>
+            <span className="text-gray-500">:</span>{""}
+            <span className="font-mono text-black">"{line.value}"</span>
+          </p>
 
         </div>
       ))}

@@ -1,8 +1,79 @@
+import { useState, type ReactNode } from "react";
+
 import Spotlight from "./components/Spotlight/Spotlight";
-import { profile } from "./data/profiles";
+import StudentDropdown from "./components/ui/StudentDropdown";
+import { useProfiles } from "./hooks/useProfiles";
+import { withSlugs } from "./lib/loadProfiles";
+
+/** Read the `?student=<slug>` value from the URL on first load. */
+function readSlugFromUrl(): string | null {
+  return new URLSearchParams(window.location.search).get("student");
+}
+
+/** Centered full-screen message that matches the dark Spotlight theme. */
+function StatusScreen({ children }: { children: ReactNode }) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#09091b] p-6 text-center font-mono text-sm text-gray-300">
+      <div>{children}</div>
+    </main>
+  );
+}
 
 function App() {
-  return <Spotlight profile={profile} />;
+  const { status, profiles, error, isRefreshing, reload } = useProfiles();
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(readSlugFromUrl);
+
+  if (status === "loading") {
+    return <StatusScreen>Loading profiles…</StatusScreen>;
+  }
+
+  if (status === "error") {
+    return (
+      <StatusScreen>
+        <p className="mb-2 text-[#f6b8d9]">Couldn’t load profiles.</p>
+        <p className="mb-4 text-gray-500">{error}</p>
+        <button
+          type="button"
+          onClick={reload}
+          className="border border-white/30 px-4 py-2 font-mono text-xs uppercase tracking-wider text-gray-200 transition hover:bg-white/10"
+        >
+          Retry
+        </button>
+      </StatusScreen>
+    );
+  }
+
+  const entries = withSlugs(profiles);
+
+  if (entries.length === 0) {
+    return <StatusScreen>No profiles found in the sheet yet.</StatusScreen>;
+  }
+
+  const selected = entries.find((entry) => entry.slug === selectedSlug) ?? entries[0];
+
+  const selectStudent = (slug: string) => {
+    setSelectedSlug(slug);
+    const url = new URL(window.location.href);
+    url.searchParams.set("student", slug);
+    window.history.replaceState({}, "", url);
+  };
+
+  return (
+    <Spotlight
+      profile={selected.profile}
+      onRefresh={reload}
+      isRefreshing={isRefreshing}
+      selector={
+        entries.length > 1 ? (
+          <StudentDropdown
+            entries={entries}
+            selectedSlug={selected.slug}
+            onSelect={selectStudent}
+          />
+        ) : undefined
+      }
+    />
+  );
 }
 
 export default App;
