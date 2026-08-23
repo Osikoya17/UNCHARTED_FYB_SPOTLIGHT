@@ -137,13 +137,13 @@ npm --version
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git clone https://github.com/Osikoya17/UNCHARTED_FYB_SPOTLIGHT.git
 ```
 
 Navigate into the project:
 
 ```bash
-cd YOUR_REPOSITORY
+cd UNCHARTED_FYB_SPOTLIGHT
 ```
 
 Install dependencies:
@@ -542,7 +542,7 @@ The visual design and creative execution were developed with contributions from 
 | Concept & Design Lead         | **Ojo Oluwagbayin**           |
 | Design & Creative Team        | **UNCHARTED FYB Design Team** |
 | Creative Leadership & Support | **UNCHARTED FYB Chairmen**    |
-| Web Implementation            | **Your Name**                 |
+| Web Implementation            | **Osikoya Olaluwa**                 |
 
 > The original FYB Spotlight concept and visual design are credited to Ojo Oluwagbayin and the UNCHARTED FYB Design Team, with the UNCHARTED FYB Chairmen providing creative leadership and support.
 
