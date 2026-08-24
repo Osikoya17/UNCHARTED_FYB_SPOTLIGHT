@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 
 import Spotlight from "./components/Spotlight/Spotlight";
 import StudentDropdown from "./components/ui/StudentDropdown";
+import ProfileNavButton from "./components/ui/ProfileNavButton";
 import { useProfiles } from "./hooks/useProfiles";
 import { withSlugs } from "./lib/loadProfiles";
 
@@ -58,6 +59,16 @@ function App() {
     window.history.replaceState({}, "", url);
   };
 
+  // Arrow navigation wraps around, so browsing the whole class never dead-ends.
+  const selectedIndex = entries.indexOf(selected);
+  const neighbour = (delta: number) =>
+    entries[(selectedIndex + delta + entries.length) % entries.length];
+
+  const nameOf = (index: number) => {
+    const { profile } = entries[index];
+    return profile.firstname || profile.nickname || entries[index].slug;
+  };
+
   return (
     <Spotlight
       profile={selected.profile}
@@ -65,11 +76,27 @@ function App() {
       isRefreshing={isRefreshing}
       selector={
         entries.length > 1 ? (
-          <StudentDropdown
-            entries={entries}
-            selectedSlug={selected.slug}
-            onSelect={selectStudent}
-          />
+          <div className="flex min-w-0 items-center gap-2">
+
+            <ProfileNavButton
+              direction="prev"
+              onClick={() => selectStudent(neighbour(-1).slug)}
+              targetLabel={nameOf(entries.indexOf(neighbour(-1)))}
+            />
+
+            <StudentDropdown
+              entries={entries}
+              selectedSlug={selected.slug}
+              onSelect={selectStudent}
+            />
+
+            <ProfileNavButton
+              direction="next"
+              onClick={() => selectStudent(neighbour(1).slug)}
+              targetLabel={nameOf(entries.indexOf(neighbour(1)))}
+            />
+
+          </div>
         ) : undefined
       }
     />

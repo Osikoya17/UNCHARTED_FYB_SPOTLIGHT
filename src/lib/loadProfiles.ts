@@ -16,8 +16,13 @@ import { profile as sampleProfile } from "../data/profiles";
  * -----------------------------------------------------------------------------
  */
 export const COLUMN_MAP = {
-  // "Goody" is the manually-maintained full-name column (populated for every row).
-  fullName: "Goody",
+  // Names come from the two dedicated columns; the free-form "Full Name" is
+  // only a fallback because its word order varies from row to row
+  // ("Daniel Bamgbose" vs "Olaosebikan Gbolabo Michael").
+  lastname: "Last name",
+  firstname: "First name",
+  fullName: "Full Name",
+
   nickname: "Nickname",
   birthday: "Your Birthday",
 
@@ -52,6 +57,42 @@ type CsvRow = Record<string, string | undefined>;
 
 const clean = (value: string | undefined): string => (value ?? "").trim();
 
+/** Names arrive with stray spaces (" Oderanti ", "Favour  Ade") — squash them. */
+const cleanName = (value: string | undefined): string =>
+  clean(value).replace(/\s+/g, " ");
+
+/**
+ * Card title plus subtitle joined for slugs and file names — surname first, the
+ * order names are listed in on campus. Middle names are intentionally dropped.
+ */
+function displayName(lastname: string, firstname: string, fallback: string): string {
+  return [lastname, firstname].filter(Boolean).join(" ") || fallback;
+}
+
+/**
+ * The birthday column holds `DD/MM/YYYY`, but plenty of years are the year the
+ * form was filled rather than the year of birth (2025 / 2026). Show day and
+ * month only. Anything in an unexpected shape is passed through untouched.
+ */
+function formatBirthday(value: string): string {
+  const raw = clean(value);
+
+  const dayFirst = raw.match(/^(\d{1,2})\/(\d{1,2})\/\d{2,4}$/);
+  if (dayFirst) {
+    const [, day, month] = dayFirst;
+    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}`;
+  }
+
+  // Defensive: a sheet in a different locale can serialise dates as ISO.
+  const iso = raw.match(/^\d{4}-(\d{2})-(\d{2})$/);
+  if (iso) {
+    const [, month, day] = iso;
+    return `${day}/${month}`;
+  }
+
+  return raw;
+}
+
 /** Pull a Google Drive file id out of the various link shapes people paste. */
 function driveFileId(url: string): string | null {
   const match =
@@ -77,17 +118,23 @@ function toImageUrl(value: string, size = 1000): string {
 /** Values people type to mean "I have no socials" — treat as empty. */
 function cleanSocial(value: string): string {
   const raw = clean(value);
-  return /^(nil|none|n\/?a|na|nan|-|—|\.)$/i.test(raw) ? "" : raw;
+  return /^(nil+|none|n\/?a|na|nan|[-—–]+|\.+|…)$/i.test(raw) ? "" : raw;
 }
 
 /** Turn one CSV row into a typed Profile using COLUMN_MAP. */
 function rowToProfile(row: CsvRow): Profile {
   const get = (header: string): string => clean(row[header]);
 
+  const lastname = cleanName(row[COLUMN_MAP.lastname]);
+  const firstname = cleanName(row[COLUMN_MAP.firstname]);
+
   return {
-    fullName: get(COLUMN_MAP.fullName),
+    lastname,
+    firstname,
+    fullName: displayName(lastname, firstname, cleanName(row[COLUMN_MAP.fullName])),
+
     nickname: get(COLUMN_MAP.nickname),
-    birthday: get(COLUMN_MAP.birthday),
+    birthday: formatBirthday(row[COLUMN_MAP.birthday] ?? ""),
 
     photo: toImageUrl(row[COLUMN_MAP.photo] ?? ""),
     throwbackPhoto: toImageUrl(row[COLUMN_MAP.throwbackPhoto] ?? ""),

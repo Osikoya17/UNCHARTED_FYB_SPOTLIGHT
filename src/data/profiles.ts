@@ -1,7 +1,10 @@
 import type { Profile } from "../types/profiles";
 
 export const profile: Profile = {
+  lastname: "",
+  firstname: "",
   fullName: "",
+
   nickname: "",
   birthday: "",
 

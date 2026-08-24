@@ -1,6 +1,10 @@
 import { useState, type ReactNode } from "react";
 
 import type { Profile } from "../../types/profiles";
+import { UNCLIP_ATTRIBUTE } from "../../lib/exportImage";
+import { profileSlug } from "../../lib/loadProfiles";
+import { useImageDownload } from "../../hooks/useImageDownload";
+import DownloadButton from "../ui/DownloadButton";
 
 import TopMeta from "./TopMeta";
 import Header from "./Header";
@@ -38,6 +42,11 @@ interface SpotlightProps {
 const Spotlight = ({ profile, onRefresh, isRefreshing, selector }: SpotlightProps) => {
 
   const [bgColor, setBgColor] = useState<BgColor>("blue");
+
+  // The card itself is the capture target; the toolbar above it is not.
+  const { targetRef, busyFormat, notice, download } = useImageDownload(
+    () => `fyb-spotlight-${profileSlug(profile)}-${bgColor}`,
+  );
 
   const sections = [
     {
@@ -136,41 +145,52 @@ const Spotlight = ({ profile, onRefresh, isRefreshing, selector }: SpotlightProp
 
       {/* Background switcher */}
 
-      <div className="mx-auto mb-3 flex w-full items-center justify-between gap-2 md:max-w-[800px]">
+      <div className="mx-auto mb-3 flex w-full flex-wrap items-center justify-between gap-2 md:max-w-[800px]">
 
-        {/* Student selector (left) — empty spacer keeps Theme right-aligned when absent */}
+        {/* Student selector (left) — empty spacer keeps the controls right-aligned when absent */}
         <div className="min-w-0 flex-1">
           {selector}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
 
-          <span className="font-mono text-[10px] uppercase tracking-wider text-gray-500">
-            Theme
-          </span>
+          <div className="flex items-center gap-2">
 
-          {(Object.keys(BACKGROUNDS) as BgColor[]).map((color) => (
-            <button
-              key={color}
-              type="button"
-              onClick={() => setBgColor(color)}
-              aria-label={`${color} background`}
-              aria-pressed={bgColor === color}
-              title={`${color} background`}
-              style={{ backgroundColor: SWATCH_COLOR[color] }}
-              className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-[#09091b] transition ${
-                bgColor === color
-                  ? "ring-white"
-                  : "ring-transparent hover:ring-white/40"
-              }`}
-            />
-          ))}
+            <span className="font-mono text-[10px] uppercase tracking-wider text-gray-500">
+              Theme
+            </span>
+
+            {(Object.keys(BACKGROUNDS) as BgColor[]).map((color) => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => setBgColor(color)}
+                aria-label={`${color} background`}
+                aria-pressed={bgColor === color}
+                title={`${color} background`}
+                style={{ backgroundColor: SWATCH_COLOR[color] }}
+                className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-[#09091b] transition ${
+                  bgColor === color
+                    ? "ring-white"
+                    : "ring-transparent hover:ring-white/40"
+                }`}
+              />
+            ))}
+
+          </div>
+
+          <DownloadButton
+            busyFormat={busyFormat}
+            notice={notice}
+            onDownload={download}
+          />
 
         </div>
 
       </div>
 
       <section
+        ref={targetRef}
         style={{
           backgroundImage: `url('${BACKGROUNDS[bgColor]}')`,
           backgroundColor: FALLBACK_COLOR[bgColor],
@@ -187,7 +207,13 @@ const Spotlight = ({ profile, onRefresh, isRefreshing, selector }: SpotlightProp
 
         <Header onFetch={onRefresh} isFetching={isRefreshing} />
 
-        <div className="grid grid-cols-1 gap-4 px-5 pb-8 sm:grid-cols-[1fr_1.08fr] sm:px-9 md:min-h-0 md:flex-1 md:overflow-y-auto">
+        {/* The scroll box on desktop — the export lifts this so nothing is cut off.
+            minmax(0,…) tracks stop a long answer from stealing width from the
+            other column, so every student's card has the same geometry. */}
+        <div
+          {...{ [UNCLIP_ATTRIBUTE]: "" }}
+          className="grid grid-cols-1 gap-4 px-5 pb-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] sm:px-9 md:min-h-0 md:flex-1 md:overflow-y-auto"
+        >
 
           <div>
 

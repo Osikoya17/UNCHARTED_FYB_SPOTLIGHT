@@ -16,6 +16,8 @@ const PhotoSection = ({
         <img
           src={photo}
           alt="Profile"
+          /* googleusercontent answers 429 to anything carrying a Referer. */
+          referrerPolicy="no-referrer"
           className="h-full w-full object-cover"
         />
       ) : (

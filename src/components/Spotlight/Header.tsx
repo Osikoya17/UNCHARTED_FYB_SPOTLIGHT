@@ -7,8 +7,8 @@ interface HeaderProps {
 
 const Header = ({ onFetch, isFetching = false }: HeaderProps) => {
   return (
-    <header className="flex mt-4 md:mt-10 items-start justify-between px-5 pb-6 pt-4 sm:px-9">
-      <h1 className="font-mono font-normal text-3xl font-black leading-[0.85] tracking-[-4px] text-white sm:text-3xl">
+    <header className="flex mt-4 items-start justify-between px-5 pb-6 pt-4 sm:px-9">
+      <h1 className="font-wilhem font-normal text-5xl font-black leading-[0.85] tracking-[0px] text-white sm:text-3xl">
         FYB
         <br />
         SPOTLIGHT
