@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import type { Profile } from "../../types/profiles";
 import { UNCLIP_ATTRIBUTE } from "../../lib/exportImage";
@@ -72,6 +72,13 @@ interface SpotlightProps {
 const Spotlight = ({ profile, studentNumber, onRefresh, isRefreshing, onPrev, onNext, selector }: SpotlightProps) => {
 
   const [bgColor, setBgColor] = useState<BgColor>("blue");
+
+  // Reflect the selected theme on the document root so the palette variables in
+  // index.css (page background, <body>, toolbar surfaces) switch with it. The
+  // card carries its own per-theme artwork; this themes everything around it.
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", bgColor);
+  }, [bgColor]);
 
   // The card itself is the capture target; the toolbar above it is not.
   const { targetRef, busyFormat, notice, download } = useImageDownload(
@@ -198,7 +205,7 @@ const Spotlight = ({ profile, studentNumber, onRefresh, isRefreshing, onPrev, on
   ];
 
   return (
-    <main className="min-h-screen bg-[#09091b] p-2 sm:p-7">
+    <main className="min-h-screen bg-(--page-bg) p-2 transition-colors sm:p-7">
 
       {/* Toolbar — outside the card, so none of it lands in the download */}
 
@@ -226,7 +233,7 @@ const Spotlight = ({ profile, studentNumber, onRefresh, isRefreshing, onPrev, on
                 aria-pressed={bgColor === color}
                 title={`${color} background`}
                 style={{ backgroundColor: SWATCH_COLOR[color] }}
-                className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-[#09091b] transition ${
+                className={`h-5 w-5 rounded-full ring-2 ring-offset-2 ring-offset-(--page-bg) transition ${
                   bgColor === color
                     ? "ring-white"
                     : "ring-transparent hover:ring-white/40"

@@ -101,7 +101,7 @@ const StudentDropdown = ({ entries, selectedSlug, onSelect }: StudentDropdownPro
 
       {/* Trigger — becomes the search field once open */}
       <div
-        className={`flex w-full items-center justify-between gap-3 rounded-md border bg-[#12122a] px-3 py-2 text-left transition ${
+        className={`flex w-full items-center justify-between gap-3 rounded-md border bg-(--surface) px-3 py-2 text-left transition ${
           open ? "border-white/40" : "border-white/20 hover:border-white/40"
         }`}
       >
@@ -159,7 +159,7 @@ const StudentDropdown = ({ entries, selectedSlug, onSelect }: StudentDropdownPro
         <ul
           role="listbox"
           aria-label="Students"
-          className="absolute z-20 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-white/20 bg-[#0d0d20] py-1 shadow-[6px_6px_0_rgba(0,0,0,0.35)]"
+          className="absolute z-20 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-white/20 bg-(--surface-strong) py-1 shadow-[6px_6px_0_rgba(0,0,0,0.35)]"
         >
           {matches.length === 0 && (
             <li className="px-3 py-2 text-[10px] uppercase tracking-wider text-gray-500">

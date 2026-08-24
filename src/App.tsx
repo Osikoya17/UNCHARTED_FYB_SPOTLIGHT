@@ -14,7 +14,7 @@ function readSlugFromUrl(): string | null {
 /** Centered full-screen message that matches the dark Spotlight theme. */
 function StatusScreen({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#09091b] p-6 text-center font-mono text-sm text-gray-300">
+    <main className="flex min-h-screen items-center justify-center bg-(--page-bg) p-6 text-center font-mono text-sm text-gray-300">
       <div>{children}</div>
     </main>
   );

@@ -29,7 +29,7 @@ const DownloadButton = ({ busyFormat, notice, onDownload }: DownloadButtonProps)
         Save
       </span>
 
-      <div className="flex overflow-hidden rounded-md border border-white/20 bg-[#12122a] font-mono">
+      <div className="flex overflow-hidden rounded-md border border-white/20 bg-(--surface) font-mono">
         {FORMATS.map(({ format, label }, index) => (
           <button
             key={format}
@@ -51,7 +51,7 @@ const DownloadButton = ({ busyFormat, notice, onDownload }: DownloadButtonProps)
       {notice && (
         <p
           aria-live="polite"
-          className={`absolute right-0 top-full z-10 mt-1.5 max-w-[70vw] truncate rounded bg-[#12122a] px-2 py-1 font-mono text-[10px] ${
+          className={`absolute right-0 top-full z-10 mt-1.5 max-w-[70vw] truncate rounded bg-(--surface) px-2 py-1 font-mono text-[10px] ${
             notice.tone === "ok" ? "text-[#4ade80]" : "text-[#f6b8d9]"
           }`}
         >

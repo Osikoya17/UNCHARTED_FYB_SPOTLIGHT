@@ -29,6 +29,25 @@
   --font-wilhem: "Wilhelm", sans-serif;
 }
 
+/*
+  Theme palette — the tokens that tint everything AROUND the card: the page,
+  the <body>, and the toolbar surfaces. Switching theme recolours the whole
+  shell, not just the card artwork. The switcher sets data-theme on <html> and
+  each theme simply overrides these variables (blue is the default navy, green
+  the alternate). Referenced from class names as bg-(--…).
+*/
+:root {
+  --page-bg: #09091b;
+  --surface: #12122a;
+  --surface-strong: #0d0d20;
+}
+
+:root[data-theme="green"] {
+  --page-bg: #07130f;
+  --surface: #10231b;
+  --surface-strong: #091712;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -38,4 +57,11 @@ body,
 #root {
   margin: 0;
   min-height: 100%;
+}
+
+/* Paint the backdrop on the body as well as <main>, so overscroll / mobile
+   rubber-banding shows the themed colour instead of a flash of black. */
+body {
+  background-color: var(--page-bg);
+  transition: background-color 200ms ease;
 }

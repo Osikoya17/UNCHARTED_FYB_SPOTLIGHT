@@ -24,7 +24,7 @@ const ProfileNavButton = ({ direction, onClick, targetLabel }: ProfileNavButtonP
       onClick={onClick}
       aria-label={label}
       title={targetLabel ? `${label}: ${targetLabel}` : label}
-      className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/20 bg-[#12122a] transition hover:border-white/40 hover:bg-white/10 active:translate-y-px"
+      className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/20 bg-(--surface) transition hover:border-white/40 hover:bg-white/10 active:translate-y-px"
     >
       <img src={icon} alt="" aria-hidden="true" className="h-full w-full scale-150" />
     </button>
