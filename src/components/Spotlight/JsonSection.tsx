@@ -13,12 +13,12 @@ const JsonSection = ({
   startNumber,
 }: JsonSectionProps) => {
   return (
-    <div className="rounded-md border border-white/40 bg-[#eeeeef] p-4 text-[#808080]">
+    <div className="rounded-md border border-white/40 bg-[#eeeeef] p-2 text-[#808080]">
 
       {lines.map((line, index) => (
         <div
           key={line.key}
-          className="grid grid-cols-[25px_minmax(0,1fr)] gap-1 py-1 text-[10px] leading-5 sm:grid-cols-[30px_minmax(0,1fr)] sm:text-[13px]"
+          className="grid grid-cols-[25px_minmax(0,1fr)] gap-1 text-[10px] leading-5 @min-[560px]:grid-cols-[30px_minmax(0,1fr)] @min-[560px]:text-[13px] @min-[560px]:leading-loose"
         >
 
           <span className="text-[#999aaa]">
@@ -32,8 +32,8 @@ const JsonSection = ({
             flush with the gutter — so continuation lines always align to the
             same x regardless of how long the key is.
           */}
-          <p className="break-words pl-5 [text-indent:-1.25rem]">
-            <span className="font-bold font-apfel">"{line.key}"</span>
+          <p className="wrap-break-word pl-5 -indent-5">
+            <span className="font-normal font-apfel text-[#999aaa]">"{line.key}"</span>
             <span className="text-gray-500">:</span>{""}
             <span className="font-mono text-black">"{line.value}"</span>
           </p>

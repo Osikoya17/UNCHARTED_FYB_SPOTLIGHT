@@ -64,6 +64,9 @@ function App() {
   const neighbour = (delta: number) =>
     entries[(selectedIndex + delta + entries.length) % entries.length];
 
+  const goPrev = () => selectStudent(neighbour(-1).slug);
+  const goNext = () => selectStudent(neighbour(1).slug);
+
   const nameOf = (index: number) => {
     const { profile } = entries[index];
     return profile.firstname || profile.nickname || entries[index].slug;
@@ -72,17 +75,24 @@ function App() {
   return (
     <Spotlight
       profile={selected.profile}
+      studentNumber={selectedIndex + 1}
       onRefresh={reload}
       isRefreshing={isRefreshing}
+      onPrev={entries.length > 1 ? goPrev : undefined}
+      onNext={entries.length > 1 ? goNext : undefined}
       selector={
         entries.length > 1 ? (
           <div className="flex min-w-0 items-center gap-2">
 
-            <ProfileNavButton
-              direction="prev"
-              onClick={() => selectStudent(neighbour(-1).slug)}
-              targetLabel={nameOf(entries.indexOf(neighbour(-1)))}
-            />
+            {/* Arrows are for pointer devices; on phones they're hidden and a
+                left/right swipe on the card navigates instead (see Spotlight). */}
+            <span className="hidden sm:flex">
+              <ProfileNavButton
+                direction="prev"
+                onClick={goPrev}
+                targetLabel={nameOf(entries.indexOf(neighbour(-1)))}
+              />
+            </span>
 
             <StudentDropdown
               entries={entries}
@@ -90,11 +100,13 @@ function App() {
               onSelect={selectStudent}
             />
 
-            <ProfileNavButton
-              direction="next"
-              onClick={() => selectStudent(neighbour(1).slug)}
-              targetLabel={nameOf(entries.indexOf(neighbour(1)))}
-            />
+            <span className="hidden sm:flex">
+              <ProfileNavButton
+                direction="next"
+                onClick={goNext}
+                targetLabel={nameOf(entries.indexOf(neighbour(1)))}
+              />
+            </span>
 
           </div>
         ) : undefined

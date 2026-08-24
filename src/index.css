@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
+/*
+  Wilhelm — the display face used for the "FYB SPOTLIGHT" wordmark. Ships as a
+  single Regular weight (OTF, with the older TTF as a fallback source); a bolder
+  request like `font-black` on the heading is synthesised by the browser.
+  Sibling styles live alongside this file if a different look is ever wanted:
+  Wilhelm-Sans.otf, Wilhelm-Slab.otf, Wilhelm-SlabRough.otf.
+*/
 @font-face {
-  font-family: "Wilhem";
-  src: url("./assets/fonts/Wilhem-Regular.ttf")
-    format("truetype");
+  font-family: "Wilhelm";
+  src:
+    url("./assets/fonts/Wilhelm-Regular.otf") format("opentype"),
+    url("./assets/fonts/Wilhelm.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-:root {
-  --font-mono:
-    "JetBrains Mono",
-    monospace;
-
-  --font-apfel:
-    "Apfel Grotezk",
-    sans-serif;
-  
-  --font-wilhem:
-    "Wilhem",
-    sans-serif;
+/*
+  Font families live in @theme (not :root) so Tailwind v4 generates the matching
+  `font-*` utilities — `font-mono`, `font-apfel`, `font-wilhem`. Declared in
+  :root they would set the CSS variable but produce no utility class, which is
+  why those classes were previously no-ops.
+*/
+@theme {
+  --font-mono: "JetBrains Mono", monospace;
+  --font-apfel: "Apfel Grotezk", sans-serif;
+  --font-wilhem: "Wilhelm", sans-serif;
 }
 
 * {

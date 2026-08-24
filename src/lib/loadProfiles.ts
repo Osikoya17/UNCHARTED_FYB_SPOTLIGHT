@@ -207,6 +207,37 @@ export function profileSlug(profile: Profile): string {
   return base || "student";
 }
 
+/**
+ * The free-text answer fields — everything a student actually wrote, excluding
+ * identity/meta (names, nickname, birthday, photos, social handle). Used to
+ * gauge how much prose a card has to hold.
+ */
+const WRITEUP_FIELDS: (keyof Profile)[] = [
+  "funFact",
+  "favCourse",
+  "leastFavCourse",
+  "favLecturer",
+  "favYoutubeTutor",
+  "whatDoYouDo",
+  "bestExpOnCampus",
+  "worstExpOnCampus",
+  "ifNotCSC",
+  "unexpectedExp",
+  "hotTake",
+  "journeyInOneWord",
+  "overallOauExperience",
+  "favQuote",
+  "shoutout",
+];
+
+/** Total characters a student wrote across every free-text answer. */
+export function writeupLength(profile: Profile): number {
+  return WRITEUP_FIELDS.reduce(
+    (total, field) => total + (profile[field] ?? "").length,
+    0,
+  );
+}
+
 export interface ProfileEntry {
   slug: string;
   profile: Profile;

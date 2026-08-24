@@ -10,7 +10,7 @@ const PhotoSection = ({
   throwbackPhoto,
 }: PhotoSectionProps) => {
   return (
-    <div className="relative h-[500px] overflow-hidden rounded-md border border-white/50 bg-[#eeeeef] sm:h-[680px] md:h-[560px]">
+    <div className="relative h-125 overflow-hidden rounded-md border border-white/50 bg-[#eeeeef] @min-[560px]:h-170 @min-[760px]:h-140 @min-[900px]:h-auto @min-[900px]:aspect-3/4">
 
       {photo ? (
         <img

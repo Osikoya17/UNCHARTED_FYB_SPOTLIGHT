@@ -41,6 +41,18 @@ const JPEG_BACKGROUND = "#09091b";
 /** Marks descendants whose scroll/height clipping must be lifted for the export. */
 export const UNCLIP_ATTRIBUTE = "data-export-unclip";
 
+/**
+ * Width the card is captured at, whatever the window is doing.
+ *
+ * The card lays itself out from its own width via container queries, so pinning
+ * the clone to this width makes every download come out as the medium "poster"
+ * layout — the same file from a phone, a laptop, or an ultrawide monitor.
+ */
+const EXPORT_WIDTH = 800;
+
+/** Poster proportion the card falls back to when a student wrote very little. */
+const EXPORT_MIN_ASPECT = 4 / 3;
+
 /** Stand-in for an image we couldn't read — keeps the SVG render from failing. */
 const TRANSPARENT_PIXEL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -173,24 +185,28 @@ function embeddedFonts(node: HTMLElement): Promise<string> {
 }
 
 /**
- * Stage a clone off-screen at the node's on-screen width, with the height and
- * scroll limits lifted so the full card lays out.
+ * Stage a clone off-screen at the fixed export width, with the height and scroll
+ * limits lifted so the full card lays out.
+ *
+ * A clone rather than the live node so the page doesn't visibly resize, and at a
+ * fixed width rather than the on-screen width so the download is the same shape
+ * from any device.
  */
 function stageClone(node: HTMLElement): { clone: HTMLElement; remove: () => void } {
-  const width = node.offsetWidth;
-
   const stage = document.createElement("div");
   stage.setAttribute("aria-hidden", "true");
-  stage.style.cssText = `position:fixed;top:0;left:0;width:${width}px;opacity:0;pointer-events:none;z-index:-1;`;
+  stage.style.cssText = `position:fixed;top:0;left:0;width:${EXPORT_WIDTH}px;opacity:0;pointer-events:none;z-index:-1;`;
 
   const clone = node.cloneNode(true) as HTMLElement;
   clone.style.margin = "0";
-  clone.style.width = `${width}px`;
+  clone.style.width = `${EXPORT_WIDTH}px`;
   clone.style.maxWidth = "none";
-  // Let the card grow past its aspect-locked box, but never shrink below it.
+  // Let the card grow to fit its content, but never shrink below the poster
+  // proportions. (The card's own min-height is in container-query units, which
+  // resolve against a wrapper that isn't cloned — so restate it in pixels.)
   clone.style.aspectRatio = "auto";
   clone.style.height = "auto";
-  clone.style.minHeight = `${node.offsetHeight}px`;
+  clone.style.minHeight = `${Math.round(EXPORT_WIDTH * EXPORT_MIN_ASPECT)}px`;
 
   clone
     .querySelectorAll<HTMLElement>(`[${UNCLIP_ATTRIBUTE}]`)
