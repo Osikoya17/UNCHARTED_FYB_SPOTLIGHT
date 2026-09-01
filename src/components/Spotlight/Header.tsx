@@ -30,7 +30,7 @@ const Header = ({ onFetch, isFetching = false, meta }: HeaderProps) => {
 
       <div className="ml-4 flex shrink-0 flex-col items-end gap-2">
         <img
-          src="/UN (+ icon)-w.png"
+          src="/UNicon.png"
           alt="Uncharted"
           className="h-9 w-auto @min-[560px]:h-12 @min-[900px]:h-16"
         />
