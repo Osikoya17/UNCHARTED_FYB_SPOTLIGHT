@@ -79,7 +79,7 @@ function corsFriendlyUrl(src: string): string | null {
     const id = url.searchParams.get("id");
     if (!id) return null;
 
-    const size = url.searchParams.get("sz") || "w1000";
+    const size = url.searchParams.get("sz") || "w600";
     return `https://lh3.googleusercontent.com/d/${id}=${size}`;
   } catch {
     return null;

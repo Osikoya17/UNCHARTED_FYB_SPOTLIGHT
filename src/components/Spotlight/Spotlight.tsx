@@ -275,19 +275,37 @@ const Spotlight = ({ profile, studentNumber, onRefresh, isRefreshing, onPrev, on
 
         <section
           ref={targetRef}
-          style={{
-            backgroundImage: `url('${BACKGROUNDS[bgColor]}')`,
-            backgroundColor: FALLBACK_COLOR[bgColor],
-          }}
           className="
       @container relative flex w-full flex-col overflow-hidden
       border border-white/20
-      bg-cover bg-center bg-no-repeat
       text-white transition-colors
       @min-[760px]:min-h-[133.333cqw]
       @min-[900px]:min-h-[56.25cqw]
           "
         >
+
+          {/* Themed artwork crossfades when the theme changes — every non-active
+              layer is painted but transparent, so the switch is a smooth dissolve
+              rather than a hard image swap. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            {(Object.keys(BACKGROUNDS) as BgColor[]).map((color) => (
+              <div
+                key={color}
+                style={{
+                  backgroundImage: `url('${BACKGROUNDS[color]}')`,
+                  backgroundColor: FALLBACK_COLOR[color],
+                }}
+                className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-[opacity,transform] duration-700 ease-out ${
+                  bgColor === color
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-[1.04]"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Content sits above the artwork layers */}
+          <div className="relative z-10 flex w-full flex-1 flex-col">
 
           {/* Meta strip — folded into the header row on the wide template */}
           <div className="@min-[900px]:hidden">
@@ -399,6 +417,8 @@ const Spotlight = ({ profile, studentNumber, onRefresh, isRefreshing, onPrev, on
           {/* Footer */}
 
           <Footer />
+
+          </div>
 
         </section>
 

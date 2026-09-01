@@ -107,7 +107,7 @@ function driveFileId(url: string): string | null {
  * do NOT render in an <img>. Convert them to the thumbnail endpoint (which serves
  * the actual image, CORS-friendly). Non-Drive URLs are returned untouched.
  */
-function toImageUrl(value: string, size = 1000): string {
+function toImageUrl(value: string, size = 600): string {
   const raw = clean(value);
   if (!raw) return "";
   if (!/drive\.google|docs\.google/i.test(raw)) return raw;

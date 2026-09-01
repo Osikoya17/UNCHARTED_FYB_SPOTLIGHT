@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface ThrowbackProps {
   image?: string;
 }
@@ -20,13 +22,8 @@ const Throwback = ({ image }: ThrowbackProps) => {
 
       
           <div className="mx-1 mt-1 flex  rounded-md font-mono">
-          <img
-            src={image}
-            alt="Throwback"
-            /* googleusercontent answers 429 to anything carrying a Referer. */
-            referrerPolicy="no-referrer"
-            className=" h-30 w-full rounded-md object-cover"
-          />
+          {/* Keyed by src so switching students restarts the fade. */}
+          <ThrowbackPhoto key={image} src={image} />
           </div>
         
         </div>
@@ -34,6 +31,27 @@ const Throwback = ({ image }: ThrowbackProps) => {
       null
       }
     </>
+  );
+};
+
+/** Fades the throwback photo in once it has loaded. */
+const ThrowbackPhoto = ({ src }: { src: string }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <img
+      src={src}
+      alt="Throwback"
+      /* googleusercontent answers 429 to anything carrying a Referer. */
+      referrerPolicy="no-referrer"
+      loading="lazy"
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      onError={() => setLoaded(true)}
+      className={`h-30 w-full rounded-md object-cover transition-opacity duration-500 ${
+        loaded ? "opacity-100" : "opacity-0"
+      }`}
+    />
   );
 };
 
